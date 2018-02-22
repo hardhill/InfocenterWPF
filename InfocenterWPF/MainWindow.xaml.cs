@@ -19,6 +19,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Interop;
 
 namespace InfocenterWPF
 {
@@ -46,6 +47,8 @@ namespace InfocenterWPF
             string http = ConfigurationManager.AppSettings["Http"];
             wb.Source = new Uri(http);
             myClient = new MyClient(server, "");
+            myClient.OnOpenedClient += MyClient_OnOpenedClient;
+            myClient.OnCloseSocket += MyClient_OnCloseSocket;
             CurrentContactUser = new ContactUser();
             timerMain = new DispatcherTimer();
             timerMain.Tick += TimerMain_Tick;
@@ -62,6 +65,24 @@ namespace InfocenterWPF
             {
 
             }
+        }
+
+        private void MyClient_OnCloseSocket(object sender, EventArgs e)
+        {
+            Dispatcher.BeginInvoke((Action)(() =>
+            {
+                formMessage.Title = "Сообщения (нет соединения)";
+            }));
+        }
+
+        private void MyClient_OnOpenedClient(object sender, EventArgs e)
+        {
+           
+            //HwndSource hwnd = (HwndSource)PresentationSource.FromVisual(formMessage);
+            Dispatcher.BeginInvoke((Action)(() => {
+                formMessage.Title = myClient.Winlogin;
+            }));
+
         }
 
         private void TimerMain_Tick(object sender, EventArgs e)
