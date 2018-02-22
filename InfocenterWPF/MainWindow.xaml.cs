@@ -20,6 +20,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Interop;
+using SuperSocket.ClientEngine;
+using WebSocket4Net;
+using Newtonsoft.Json;
 
 namespace InfocenterWPF
 {
@@ -49,6 +52,10 @@ namespace InfocenterWPF
             myClient = new MyClient(server, "");
             myClient.OnOpenedClient += MyClient_OnOpenedClient;
             myClient.OnCloseSocket += MyClient_OnCloseSocket;
+            myClient.OnErrorClient += MyClient_OnErrorClient;
+            myClient.OnMessageRecievedClient += MyClient_OnMessageRecievedClient;
+            myClient.OnChangeContactList += MyClient_OnChangeContactList;
+            myClient.OnChangeDialogList += MyClient_OnChangeDialogList;
             CurrentContactUser = new ContactUser();
             timerMain = new DispatcherTimer();
             timerMain.Tick += TimerMain_Tick;
@@ -65,6 +72,41 @@ namespace InfocenterWPF
             {
 
             }
+        }
+
+        private void MyClient_OnChangeDialogList(List<Dialoge> dialoges)
+        {
+            //изменение списка диалога(?)
+
+        }
+
+        private void MyClient_OnChangeContactList(List<ContactUser> contacts)
+        {
+            //изменения списка контактов
+        }
+
+        private void MyClient_OnMessageRecievedClient(object sender, MessageReceivedEventArgs e)
+        {
+            //сообщения приняты
+            //получение новых сообщений
+                Comm comm_resp = new Comm()
+                {
+                    CommName = JsonConvert.DeserializeObject<Comm>(e.Message).CommName,
+                    Body = JsonConvert.DeserializeObject<Comm>(e.Message).Body
+                };
+                if (comm_resp.CommName == "MSG")
+                {
+                    MessageSend msg = JsonConvert.DeserializeObject<MessageSend>(comm_resp.Body.ToString());
+                    if (msg.Sender != myClient.Winlogin)
+                    {
+                        //this.SetBalloonTip("Вам пришло сообщение\r\n" + "От: " + msg.Sender);
+                    }
+                }
+        }
+
+        private void MyClient_OnErrorClient(object sender, ErrorEventArgs e)
+        {
+            //ошибки клиента
         }
 
         private void MyClient_OnCloseSocket(object sender, EventArgs e)

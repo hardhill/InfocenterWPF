@@ -35,7 +35,7 @@ namespace InfocenterWPF
         /// <summary>
         /// Hides the main window. This command is only enabled if a window is open.
         /// </summary>
-        public ICommand HideWindowCommand
+        public ICommand ShowMessanger
         {
             get
             {

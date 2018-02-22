@@ -9,7 +9,7 @@
   -->
     <ContextMenu x:Shared="false" x:Key="SysTrayMenu">
         <MenuItem Header="Главное окно" Command="{Binding ShowWindowCommand}" />
-        <MenuItem Header="Общение" Command="{Binding HideWindowCommand}" />
+        <MenuItem Header="Общение" Command="{Binding ShowMessanger}" />
         <Separator />
         <MenuItem Header="Выход" Command="{Binding ExitApplicationCommand}" />
     </ContextMenu>
@@ -18,7 +18,7 @@
     <!-- the application's NotifyIcon - started from App.xaml.cs. Declares its own view model. -->
     <tb:TaskbarIcon x:Key="NotifyIcon"
                     IconSource="logo.ico"
-                    ToolTipText="Double-click for window, right-click for menu"
+                    ToolTipText="Двойной клик мышью вызовет Главное окно, правая кнопка - меню"
                     DoubleClickCommand="{Binding ShowWindowCommand}"
                     LeftClickCommand="{Binding ShowMessanger}"
                     ContextMenu="{StaticResource SysTrayMenu}">
